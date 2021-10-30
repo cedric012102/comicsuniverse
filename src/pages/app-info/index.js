@@ -1,19 +1,24 @@
 import React from 'react';
-import {Image, Linking} from 'react-native';
+import {Image, Linking, View} from 'react-native';
 
 import {
   AppDescriptionText,
   Container,
   DevNameText,
   WebSiteLinkText,
+  ProfileIcon,
 } from '../styles/app-info-style';
+import {styles} from '../styles/index-style';
 
 import avengerLogo from '../../assets/images/blackpanther.png';
 
 const AppInfo: React.FC = () => {
   return (
     <Container>
-      <Image source={avengerLogo} style={{height: '50%', width: '35%'}}/>
+      <View style={styles.profileIcon}>
+        <Image source={avengerLogo} style={styles.image} />
+      </View>
+
       <DevNameText style={{color: 'blue'}}>Cedric Smith</DevNameText>
       <AppDescriptionText style={{color: 'red'}}>
         This app was developed using SuperHero API and React Native
