@@ -10,6 +10,7 @@ import {
 import {styles} from './styles/profile-style';
 import Auth from '@react-native-firebase/auth';
 import Firestore from '@react-native-firebase/firestore';
+import uuid from 'react-native-uuid';
 
 export function Profile({route, navigation}) {
   // de-structure hero
@@ -176,9 +177,13 @@ export function Profile({route, navigation}) {
   );
 
   async function onFavoriteAdd() {
+    console.log(hero.id);
+    let id = hero.id;
     try {
-      await Firestore().collection('favorites').add({
+      await Firestore().collection('favorites').doc(id).set({
+        // await Firestore().collection.users('favorites').doc(id).set({
         hero: hero,
+        id: id,
         userId: Auth().currentUser.uid,
       });
       navigation.navigate('Favorites');

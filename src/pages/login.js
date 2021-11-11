@@ -6,6 +6,7 @@ import {
   ScrollView,
   Alert,
   TouchableWithoutFeedback,
+  TouchableOpacity,
 } from 'react-native';
 import {GoogleSignin, statusCodes} from '@react-native-community/google-signin';
 import SocialButton from '../components/social-button';
@@ -14,6 +15,8 @@ import styles from './styles/login-style';
 import Video from 'react-native-video';
 import Auth from '@react-native-firebase/auth';
 import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
+import { Firestore } from '@firebase/firestore';
+import uuid from 'react-native-uuid';
 
 const Login = ({navigation}) => {
   const [paused, setPaused] = useState(false);
@@ -42,7 +45,7 @@ const Login = ({navigation}) => {
             source={require('../assets/images/comics.jpg')}
             style={styles.logo}
           />
-          <Text style={styles.text}>Comic Universe</Text>
+          <Text style={styles.text}>Comic Amani</Text>
           {/* <FormInput
           labelValue={email}
           onChangeText={userEmail => setEmail(userEmail)}
@@ -85,10 +88,28 @@ const Login = ({navigation}) => {
             backgroundColor="#CFFFE5"
             onPress={onGoogleButtonPress}
           />
+
+          <View style={styles.textPrivate}>
+            <Text style={styles.color_textPrivate}>
+              By signing in, you confirm that you accept the
+            </Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Terms')}>
+              <Text style={[styles.color_textPrivate, {color: '#fff'}]}>
+                Terms of Service
+              </Text>
+            </TouchableOpacity>
+            <Text style={styles.color_textPrivate}> and</Text>
+            <TouchableOpacity onPress={() => navigation.navigate('Privacy')}>
+              <Text style={[styles.color_textPrivate, {color: '#fff'}]}>
+                Privacy Policy
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </TouchableWithoutFeedback>
     </ScrollView>
   );
+
 
   async function onGoogleButtonPress() {
     try {
@@ -98,7 +119,7 @@ const Login = ({navigation}) => {
       const googleCredential = Auth.GoogleAuthProvider.credential(idToken);
       // Sign-in the user with the credential into Firebase (Auth() is Firebase)
       await Auth().signInWithCredential(googleCredential);
-
+      //  await Firestore().collection('users').doc(idToken).set({userId: idToken})
       navigation.navigate('Comics');
     } catch (e) {
       if (e.code !== statusCodes.SIGN_IN_CANCELLED) {
@@ -109,6 +130,7 @@ const Login = ({navigation}) => {
         );
       }
     }
+    // await Firestore().collection('users').doc(uid).set({userId: uid})
   }
 
   async function onFacebookButtonPress() {

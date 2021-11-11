@@ -40,7 +40,7 @@ const Favorites = ({item, navigation}) => {
 
     firestore()
       .collection('favorites')
-      .doc('character')
+      .doc(character.id)
 
       .delete()
       .then(() => {
@@ -49,7 +49,6 @@ const Favorites = ({item, navigation}) => {
       .catch(e => {
         console.log('Error while deleting the image. ', e);
       });
-    //if the post image is not available
   };
 
   useEffect(onSyncFavorites, []);

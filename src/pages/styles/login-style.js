@@ -38,6 +38,18 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
   },
+  textPrivate: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginVertical: 35,
+    justifyContent: 'center',
+  },
+  color_textPrivate: {
+    fontSize: 13,
+    fontWeight: '400',
+    fontFamily: 'Times New Roman',
+    color: 'yellow',
+  },
 });
 
 export default styles;
