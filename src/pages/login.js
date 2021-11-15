@@ -15,8 +15,12 @@ import styles from './styles/login-style';
 import Video from 'react-native-video';
 import Auth from '@react-native-firebase/auth';
 import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
-import { Firestore } from '@firebase/firestore';
+import {Firestore} from '@firebase/firestore';
 import uuid from 'react-native-uuid';
+import {
+  AppleButton,
+  appleAuth,
+} from '@invertase/react-native-apple-authentication';
 
 const Login = ({navigation}) => {
   const [paused, setPaused] = useState(false);
@@ -89,6 +93,21 @@ const Login = ({navigation}) => {
             onPress={onGoogleButtonPress}
           />
 
+          <AppleButton
+            buttonStyle={AppleButton.Style.WHITE}
+            buttonType={AppleButton.Type.SIGN_IN}
+            style={{
+              width: 160,
+              height: 45,
+              marginTop: 25,
+            }}
+            onPress={() =>
+              onAppleButtonPress().then(() =>
+                console.log('Apple sign-in complete!'),
+              )
+            }
+          />
+
           <View style={styles.textPrivate}>
             <Text style={styles.color_textPrivate}>
               By signing in, you confirm that you accept the
@@ -109,7 +128,6 @@ const Login = ({navigation}) => {
       </TouchableWithoutFeedback>
     </ScrollView>
   );
-
 
   async function onGoogleButtonPress() {
     try {
@@ -159,6 +177,35 @@ const Login = ({navigation}) => {
 
       // Sign-in the user with the credential
       await Auth().signInWithCredential(facebookCredential);
+
+      navigation.navigate('Comics');
+    } catch (error) {
+      console.log({error});
+    }
+  }
+
+  async function onAppleButtonPress() {
+    try {
+      // Start the sign-in request
+      const appleAuthRequestResponse = await appleAuth.performRequest({
+        requestedOperation: appleAuth.Operation.LOGIN,
+        requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+      });
+
+      // Ensure Apple returned a user identityToken
+      if (!appleAuthRequestResponse.identityToken) {
+        throw 'Apple Sign-In failed - no identify token returned';
+      }
+
+      // Create a Firebase credential from the response
+      const {identityToken, nonce} = appleAuthRequestResponse;
+      const appleCredential = Auth.AppleAuthProvider.credential(
+        identityToken,
+        nonce,
+      );
+
+      // Sign the user in with the credential
+      await Auth().signInWithCredential(appleCredential);
 
       navigation.navigate('Comics');
     } catch (error) {

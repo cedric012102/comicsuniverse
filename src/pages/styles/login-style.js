@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     height: 250,
-    width: 500,
+    width: 300,
     resizeMode: 'cover',
   },
   text: {
