@@ -6,7 +6,7 @@ import HomeStack from './home-stack';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
-import { LogoutButton } from '../components/logout-button';
+import {LogoutButton} from '../components/logout-button';
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -34,7 +34,7 @@ const HomeBottomTabNavigator = ({navigation}) => {
             />
           ),
         }}
-        listeners={({ navigation }) => ({
+        listeners={({navigation}) => ({
           tabPress: event => {
             setTitle('Comics');
             event.preventDefault();
@@ -51,7 +51,7 @@ const HomeBottomTabNavigator = ({navigation}) => {
             <Fontisto name={'favorite'} size={25} color={color} />
           ),
         }}
-        listeners={({ navigation }) => ({
+        listeners={({navigation}) => ({
           tabPress: event => {
             setTitle('Favorites');
             event.preventDefault();
@@ -68,7 +68,7 @@ const HomeBottomTabNavigator = ({navigation}) => {
             <Ionicons name={'menu'} size={27} color={color} />
           ),
         }}
-        listeners={({ navigation }) => ({
+        listeners={({navigation}) => ({
           tabPress: event => {
             setTitle('Info');
             event.preventDefault();

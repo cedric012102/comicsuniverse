@@ -12,4 +12,10 @@ export const styles = StyleSheet.create({
     resizeMode: 'contain',
     margin: 10,
   },
+  deleteAccountText: {
+    marginTop: 15,
+    fontSize: 15,
+    marginLeft: 10,
+    color: 'red',
+  },
 });

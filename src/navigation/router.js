@@ -4,6 +4,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import HomeBottomTabNavigator from './home-bottom-tab-navigator';
 import Login from '../pages/login';
+import SignupScreen from '../pages/signup';
 import Favorites from '../pages/favorites';
 import AppInfo from '../pages/app-info';
 import Terms from '../pages/terms';
@@ -46,6 +47,29 @@ const Router = () => {
             title: 'Comic Amani',
             headerShown: false,
           }}
+        />
+        <Stack.Screen
+          name="Signup"
+          component={SignupScreen}
+          options={({navigation}) => ({
+            title: '',
+            headerStyle: {
+              backgroundColor: '#f9fafd',
+              shadowColor: '#f9fafd',
+              elevation: 0,
+            },
+            headerLeft: () => (
+              <View style={{marginLeft: 10}}>
+                <FontAwesome.Button
+                  name="long-arrow-left"
+                  size={25}
+                  backgroundColor="#f9fafd"
+                  color="#333"
+                  onPress={() => navigation.navigate('Login')}
+                />
+              </View>
+            ),
+          })}
         />
         <Stack.Screen
           name="Favorites"

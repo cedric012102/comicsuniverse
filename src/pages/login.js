@@ -10,12 +10,14 @@ import {
 } from 'react-native';
 import {GoogleSignin, statusCodes} from '@react-native-community/google-signin';
 import SocialButton from '../components/social-button';
+import FormButton from '../components/form-button';
+import FormInput from '../components/form-input';
 import styles from './styles/login-style';
 
 import Video from 'react-native-video';
 import Auth from '@react-native-firebase/auth';
 import {LoginManager, AccessToken} from 'react-native-fbsdk-next';
-import {Firestore} from '@firebase/firestore';
+import firestore from '@react-native-firebase/firestore';
 import uuid from 'react-native-uuid';
 import {
   AppleButton,
@@ -23,6 +25,8 @@ import {
 } from '@invertase/react-native-apple-authentication';
 
 const Login = ({navigation}) => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [paused, setPaused] = useState(false);
 
   const onPlayPausePress = () => {
@@ -77,13 +81,35 @@ const Login = ({navigation}) => {
           <Text style={styles.navButtonText}>Forgot Password?</Text>
         </TouchableOpacity> */}
 
-          <SocialButton
+          {/* <SocialButton
             buttonTitle="Sign In With Facebook"
             btnType="facebook"
             color="#4867aa"
             backgroundColor="#e6eaf4"
             onPress={onFacebookButtonPress}
+          /> */}
+
+          <FormInput
+            labelValue={email}
+            onChangeText={userEmail => setEmail(userEmail)}
+            placeholderText="Email"
+            iconType="user"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoCorrect={false}
           />
+
+          <FormInput
+            labelValue={password}
+            onChangeText={userPassword => setPassword(userPassword)}
+            placeholderText="Password"
+            iconType="lock"
+            secureTextEntry={true}
+          />
+
+          <FormButton buttonTitle="Sign In" onPress={onEmailPasswordPress} />
+
+          {/* <Text style={[styles.color_textPrivate, {color: '#fff'}]}>Or</Text> */}
 
           <SocialButton
             buttonTitle="Sign In With Google"
@@ -93,13 +119,15 @@ const Login = ({navigation}) => {
             onPress={onGoogleButtonPress}
           />
 
+          {/* <Text style={[styles.color_textPrivate, {color: '#fff'}]}>Or</Text> */}
+
           <AppleButton
             buttonStyle={AppleButton.Style.WHITE}
             buttonType={AppleButton.Type.SIGN_IN}
             style={{
               width: 160,
               height: 45,
-              marginTop: 25,
+              marginTop: 15,
             }}
             onPress={() =>
               onAppleButtonPress().then(() =>
@@ -107,6 +135,14 @@ const Login = ({navigation}) => {
               )
             }
           />
+
+          <TouchableOpacity
+            style={styles.forgotButton}
+            onPress={() => navigation.navigate('Signup')}>
+            <Text style={styles.navButtonText}>
+              Don't Have An Account? Create Here
+            </Text>
+          </TouchableOpacity>
 
           <View style={styles.textPrivate}>
             <Text style={styles.color_textPrivate}>
@@ -151,38 +187,38 @@ const Login = ({navigation}) => {
     // await Firestore().collection('users').doc(uid).set({userId: uid})
   }
 
-  async function onFacebookButtonPress() {
-    try {
-      // Attempt login with permissions
-      const result = await LoginManager.logInWithPermissions([
-        'public_profile',
-        'email',
-      ]);
+  // async function onFacebookButtonPress() {
+  //   try {
+  //     // Attempt login with permissions
+  //     const result = await LoginManager.logInWithPermissions([
+  //       'public_profile',
+  //       'email',
+  //     ]);
 
-      if (result.isCancelled) {
-        throw 'User cancelled the login process';
-      }
+  //     if (result.isCancelled) {
+  //       throw 'User cancelled the login process';
+  //     }
 
-      // Once signed in, get the users AccesToken
-      const data = await AccessToken.getCurrentAccessToken();
+  //     // Once signed in, get the users AccesToken
+  //     const data = await AccessToken.getCurrentAccessToken();
 
-      if (!data) {
-        throw 'Something went wrong obtaining access token';
-      }
+  //     if (!data) {
+  //       throw 'Something went wrong obtaining access token';
+  //     }
 
-      // Create a Firebase credential with the AccessToken
-      const facebookCredential = Auth.FacebookAuthProvider.credential(
-        data.accessToken,
-      );
+  //     // Create a Firebase credential with the AccessToken
+  //     const facebookCredential = Auth.FacebookAuthProvider.credential(
+  //       data.accessToken,
+  //     );
 
-      // Sign-in the user with the credential
-      await Auth().signInWithCredential(facebookCredential);
+  //     // Sign-in the user with the credential
+  //     await Auth().signInWithCredential(facebookCredential);
 
-      navigation.navigate('Comics');
-    } catch (error) {
-      console.log({error});
-    }
-  }
+  //     navigation.navigate('Comics');
+  //   } catch (error) {
+  //     console.log({error});
+  //   }
+  // }
 
   async function onAppleButtonPress() {
     try {
@@ -210,6 +246,51 @@ const Login = ({navigation}) => {
       navigation.navigate('Comics');
     } catch (error) {
       console.log({error});
+    }
+  }
+
+  async function onRegisterEmailPasswordPress() {
+    try {
+      await Auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then(() => {
+          //Once the user creation has happened successfully, we can add the currentUser into firestore
+          //with the appropriate details.
+          firestore()
+            .collection('users')
+            .doc(Auth().currentUser.uid)
+            .set({
+              email: email,
+              createdAt: firestore.Timestamp.fromDate(new Date()),
+            })
+            //ensure we catch any errors at this stage to advise us if something does go wrong
+            .catch(error => {
+              console.log(
+                'Something went wrong with added user to firestore: ',
+                error,
+              );
+            });
+          navigation.navigate('Comics');
+        })
+        //we need to catch the whole sign up process if it fails too.
+        .catch(error => {
+          console.log('Something went wrong with sign up: ', error);
+          Alert.alert(
+            'The email address is already in use by another account.',
+          );
+        });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async function onEmailPasswordPress() {
+    try {
+      await Auth().signInWithEmailAndPassword(email, password);
+      navigation.navigate('Comics');
+    } catch (e) {
+      console.log(e);
+      Alert.alert('Email and/or Password Do Not Match. Please Try Again.');
     }
   }
 };

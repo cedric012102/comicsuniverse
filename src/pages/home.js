@@ -117,11 +117,8 @@ export function Home({navigation}) {
               onChangeText={text => setSuperHeroName(text)}
               value={superHeroName}
               maxLength={40}
-              multiline
+              textAlign="center"
             />
-            {!!superHeroName && (
-              <Icon name="x" color="#880018" size={15} onPress={clearSearch} />
-            )}
           </View>
 
           <View style={styles.searchButtonContainer}>
@@ -139,6 +136,15 @@ export function Home({navigation}) {
               />
             </TouchableOpacity>
           </View>
+          {!!superHeroName && (
+            <Icon
+              name="x"
+              color="#880018"
+              size={20}
+              onPress={clearSearch}
+              style={{paddingRight: 10}}
+            />
+          )}
         </View>
         {/* 2 */}
         <View style={styles.mainContainer}>

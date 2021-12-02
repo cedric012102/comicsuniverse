@@ -1,16 +1,18 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Dimensions} from 'react-native';
+
+const {width, height} = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
     padding: 25,
-    paddingTop: 175,
-    paddingBottom: 250,
+    width: '100%',
+    height: Dimensions.get('window').height,
   },
   logo: {
-    height: 250,
-    width: 300,
+    height: 220,
+    width: 260,
     resizeMode: 'cover',
   },
   text: {
@@ -23,7 +25,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   forgotButton: {
-    marginVertical: 35,
+    marginVertical: 12,
   },
   navButtonText: {
     fontSize: 18,
@@ -41,7 +43,7 @@ const styles = StyleSheet.create({
   textPrivate: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginVertical: 35,
+    marginVertical: 4,
     justifyContent: 'center',
   },
   color_textPrivate: {

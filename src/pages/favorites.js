@@ -16,7 +16,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 const Favorites = ({item, navigation}) => {
   const [favorites, setFavorites] = useState([]); //will be an empty array
 
-  const handleDelete = (character) => {
+  const handleDelete = character => {
     Alert.alert(
       'Remove Character From Favorites',
       'Are you sure?',
@@ -35,7 +35,7 @@ const Favorites = ({item, navigation}) => {
     );
   };
 
-  const deletePost = (character) => {
+  const deletePost = character => {
     console.log('Current Post Id: ', character);
 
     firestore()

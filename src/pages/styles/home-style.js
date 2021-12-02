@@ -19,6 +19,7 @@ export const styles = StyleSheet.create({
     marginLeft: 10,
     height: 40,
     backgroundColor: '#e2e2e2',
+    paddingTop: 9,
   },
   searchButtonContainer: {
     flex: 1,
